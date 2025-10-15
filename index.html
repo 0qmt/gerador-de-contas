@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 Gerador de Contas PSN</title>
+    <style>
+        :root {
+            --playstation-blue: #003087;
+            --playstation-light-blue: #0070D1;
+            --playstation-white: #ffffff;
+            --playstation-gray: #f5f5f5;
+            --error-red: #e74c3c;
+            --success-green: #27ae60;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--playstation-blue) 0%, var(--playstation-light-blue) 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--playstation-white);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--playstation-white);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.2);
+        }
+
+        .form-section h2 {
+            color: var(--playstation-blue);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--playstation-blue);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--playstation-light-blue);
+            box-shadow: 0 0 0 3px rgba(0,112,209,0.1);
+        }
+
+        .form-group input.error {
+            border-color: var(--error-red);
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--playstation-blue);
+            color: var(--playstation-white);
+            width: 100%;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .btn-primary:hover {
+            background: var(--playstation-light-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,48,135,0.3);
+        }
+
+        .btn-secondary {
+            background: var(--playstation-gray);
+            color: var(--playstation-blue);
+            border: 2px solid var(--playstation-blue);
+        }
+
+        .btn-secondary:hover {
+            background: var(--playstation-blue);
+            color: var(--playstation-white);
+        }
+
+        .btn-success {
+            background: var(--success-green);
+            color: var(--playstation-white);
+        }
+
+        .btn-success:hover {
+            background: #219a52;
+        }
+
+        .results-section h2 {
+            color: var(--playstation-blue);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+        }
+
+        .results-area {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 300px;
+            max-height: 500px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .results-area.empty {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+            font-style: italic;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .button-group .btn {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .error-message {
+            background: #fff5f5;
+            border: 1px solid #fed7d7;
+            color: #c53030;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .success-message {
+            background: #f0fff4;
+            border: 1px solid #9ae6b4;
+            color: #2f855a;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .accounts-count {
+            background: var(--playstation-light-blue);
+            color: var(--playstation-white);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🎮 Gerador de Contas PSN</h1>
+            <p>Interface simples para gerar e gerenciar contas PlayStation Network</p>
+        </header>
+
+        <main class="main-content">
+            <!-- Seção do Formulário -->
+            <section class="card form-section">
+                <h2>⚙️ Configurações</h2>
+                
+                <div class="error-message" id="errorMessage"></div>
+                <div class="success-message" id="successMessage"></div>
+
+                <form id="accountForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="day">📅 Dia</label>
+                            <input type="number" id="day" min="1" max="31" placeholder="Ex: 14" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="month">📅 Mês</label>
+                            <input type="number" id="month" min="1" max="12" placeholder="Ex: 10" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="startNum">🔢 Número Inicial</label>
+                            <input type="number" id="startNum" min="1" placeholder="Ex: 3" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="endNum">🔢 Número Final</label>
+                            <input type="number" id="endNum" min="1" placeholder="Ex: 10" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" id="generateBtn">
+                        ⚡ Gerar Contas
+                    </button>
+                </form>
+            </section>
+
+            <!-- Seção dos Resultados -->
+            <section class="card results-section">
+                <h2>📋 Contas Geradas</h2>
+                
+                <div id="accountsCount" class="accounts-count" style="display: none;">
+                    0 contas geradas
+                </div>
+
+                <div id="resultsArea" class="results-area empty">
+                    Preencha o formulário e clique em "Gerar Contas" para ver os resultados aqui.
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-success" id="copyBtn" disabled>
+                        📋 Copiar Tudo
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="downloadBtn" disabled>
+                        💾 Baixar TXT
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="clearBtn" disabled>
+                        🗑️ Limpar
+                    </button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        class PSNAccountGenerator {
+            constructor() {
+                this.initializeElements();
+                this.bindEvents();
+                this.generatedAccounts = '';
+                this.accountCount = 0;
+            }
+
+            initializeElements() {
+                this.form = document.getElementById('accountForm');
+                this.dayInput = document.getElementById('day');
+                this.monthInput = document.getElementById('month');
+                this.startNumInput = document.getElementById('startNum');
+                this.endNumInput = document.getElementById('endNum');
+                this.generateBtn = document.getElementById('generateBtn');
+                this.resultsArea = document.getElementById('resultsArea');
+                this.copyBtn = document.getElementById('copyBtn');
+                this.downloadBtn = document.getElementById('downloadBtn');
+                this.clearBtn = document.getElementById('clearBtn');
+                this.errorMessage = document.getElementById('errorMessage');
+                this.successMessage = document.getElementById('successMessage');
+                this.accountsCount = document.getElementById('accountsCount');
+            }
+
+            bindEvents() {
+                this.form.addEventListener('submit', (e) => this.handleGenerate(e));
+                this.copyBtn.addEventListener('click', () => this.copyToClipboard());
+                this.downloadBtn.addEventListener('click', () => this.downloadTxt());
+                this.clearBtn.addEventListener('click', () => this.clearResults());
+                
+                // Validação em tempo real
+                [this.dayInput, this.monthInput, this.startNumInput, this.endNumInput].forEach(input => {
+                    input.addEventListener('input', () => this.clearFieldError(input));
+                });
+            }
+
+            handleGenerate(e) {
+                e.preventDefault();
+                
+                if (this.validateForm()) {
+                    this.generateAccounts();
+                }
+            }
+
+            validateForm() {
+                this.hideMessages();
+                let isValid = true;
+                let errors = [];
+
+                const day = parseInt(this.dayInput.value);
+                const month = parseInt(this.monthInput.value);
+                const startNum = parseInt(this.startNumInput.value);
+                const endNum = parseInt(this.endNumInput.value);
+
+                // Validar campos obrigatórios
+                if (!day) {
+                    this.showFieldError(this.dayInput);
+                    errors.push('Dia é obrigatório');
+                    isValid = false;
+                }
+
+                if (!month) {
+                    this.showFieldError(this.monthInput);
+                    errors.push('Mês é obrigatório');
+                    isValid = false;
+                }
+
+                if (!startNum) {
+                    this.showFieldError(this.startNumInput);
+                    errors.push('Número inicial é obrigatório');
+                    isValid = false;
+                }
+
+                if (!endNum) {
+                    this.showFieldError(this.endNumInput);
+                    errors.push('Número final é obrigatório');
+                    isValid = false;
+                }
+
+                // Validar intervalos
+                if (day && (day < 1 || day > 31)) {
+                    this.showFieldError(this.dayInput);
+                    errors.push('Dia deve estar entre 1 e 31');
+                    isValid = false;
+                }
+
+                if (month && (month < 1 || month > 12)) {
+                    this.showFieldError(this.monthInput);
+                    errors.push('Mês deve estar entre 1 e 12');
+                    isValid = false;
+                }
+
+                if (startNum && endNum && startNum > endNum) {
+                    this.showFieldError(this.startNumInput);
+                    this.showFieldError(this.endNumInput);
+                    errors.push('Número inicial deve ser menor ou igual ao final');
+                    isValid = false;
+                }
+
+                if (!isValid) {
+                    this.showError(errors.join('\n'));
+                }
+
+                return isValid;
+            }
+
+            generateAccounts() {
+                const day = parseInt(this.dayInput.value);
+                const month = parseInt(this.monthInput.value);
+                const startNum = parseInt(this.startNumInput.value);
+                const endNum = parseInt(this.endNumInput.value);
+
+                // Mostrar loading
+                this.generateBtn.textContent = '⏳ Gerando...';
+                this.generateBtn.disabled = true;
+
+                setTimeout(() => {
+                    try {
+                        let accounts = [];
+                        
+                        for (let i = startNum; i <= endNum; i++) {
+                            const dayFormatted = day.toString().padStart(2, '0');
+                            const monthFormatted = month.toString().padStart(2, '0');
+                            const numFormatted = i.toString().padStart(2, '0');
+                            
+                            const email = `zyxemstore77+${dayFormatted}${monthFormatted}${numFormatted}@gmail.com`;
+                            
+                            const account = `:PlaystationWhite: Ativação Psn Deluxe\n\n:envelope: E-mail da conta: ${email}\n:lock: Senha da conta: Lostggmax2026\n:calendar_spiral: Nascimento da conta: 12/03/2000`;
+                            
+                            accounts.push(account);
+                        }
+
+                        this.generatedAccounts = accounts.join('\n\n');
+                        this.accountCount = accounts.length;
+                        this.displayResults();
+                        this.showSuccess(`${this.accountCount} contas geradas com sucesso!`);
+                        
+                    } catch (error) {
+                        this.showError('Erro ao gerar contas. Tente novamente.');
+                    } finally {
+                        this.generateBtn.textContent = '⚡ Gerar Contas';
+                        this.generateBtn.disabled = false;
+                    }
+                }, 500);
+            }
+
+            displayResults() {
+                this.resultsArea.textContent = this.generatedAccounts;
+                this.resultsArea.classList.remove('empty');
+                
+                // Mostrar contador
+                this.accountsCount.textContent = `${this.accountCount} contas geradas`;
+                this.accountsCount.style.display = 'inline-block';
+                
+                // Habilitar botões
+                this.copyBtn.disabled = false;
+                this.downloadBtn.disabled = false;
+                this.clearBtn.disabled = false;
+            }
+
+            async copyToClipboard() {
+                try {
+                    await navigator.clipboard.writeText(this.generatedAccounts);
+                    this.showSuccess('Contas copiadas para a área de transferência!');
+                } catch (error) {
+                    // Fallback para navegadores mais antigos
+                    const textarea = document.createElement('textarea');
+                    textarea.value = this.generatedAccounts;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    this.showSuccess('Contas copiadas para a área de transferência!');
+                }
+            }
+
+            downloadTxt() {
+                const blob = new Blob([this.generatedAccounts], { type: 'text/plain;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                
+                const now = new Date();
+                const timestamp = now.toISOString().slice(0, 19).replace(/[:.]/g, '-');
+                
+                link.href = url;
+                link.download = `contas-psn-${timestamp}.txt`;
+                link.style.display = 'none';
+                
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                URL.revokeObjectURL(url);
+                this.showSuccess('Arquivo TXT baixado com sucesso!');
+            }
+
+            clearResults() {
+                this.generatedAccounts = '';
+                this.accountCount = 0;
+                this.resultsArea.textContent = 'Preencha o formulário e clique em "Gerar Contas" para ver os resultados aqui.';
+                this.resultsArea.classList.add('empty');
+                
+                this.accountsCount.style.display = 'none';
+                
+                this.copyBtn.disabled = true;
+                this.downloadBtn.disabled = true;
+                this.clearBtn.disabled = true;
+                
+                this.hideMessages();
+            }
+
+            showFieldError(field) {
+                field.classList.add('error');
+            }
+
+            clearFieldError(field) {
+                field.classList.remove('error');
+            }
+
+            showError(message) {
+                this.errorMessage.textContent = message;
+                this.errorMessage.style.display = 'block';
+                this.successMessage.style.display = 'none';
+            }
+
+            showSuccess(message) {
+                this.successMessage.textContent = message;
+                this.successMessage.style.display = 'block';
+                this.errorMessage.style.display = 'none';
+                
+                // Auto-hide após 3 segundos
+                setTimeout(() => {
+                    this.successMessage.style.display = 'none';
+                }, 3000);
+            }
+
+            hideMessages() {
+                this.errorMessage.style.display = 'none';
+                this.successMessage.style.display = 'none';
+            }
+        }
+
+        // Inicializar aplicação quando DOM carregar
+        document.addEventListener('DOMContentLoaded', () => {
+            new PSNAccountGenerator();
+        });
+    </script>
+</body>
+</html>
