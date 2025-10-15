@@ -256,6 +256,90 @@
             display: inline-block;
             margin-bottom: 15px;
         }
+
+        .storage-info {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            margin-top: 15px;
+            opacity: 0.8;
+        }
+
+        .customization-section {
+            margin: 20px 0;
+            border-top: 2px solid #e0e0e0;
+            padding-top: 20px;
+        }
+
+        .customization-toggle {
+            background: var(--playstation-gray);
+            color: var(--playstation-blue);
+            border: 2px solid var(--playstation-blue);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .customization-toggle:hover {
+            background: var(--playstation-blue);
+            color: var(--playstation-white);
+        }
+
+        .customization-content {
+            display: none;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            border: 2px solid #e9ecef;
+        }
+
+        .customization-content.expanded {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                max-height: 0;
+            }
+            to {
+                opacity: 1;
+                max-height: 500px;
+            }
+        }
+
+        .template-preview {
+            background: #ffffff;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            margin-top: 15px;
+            white-space: pre-wrap;
+        }
+
+        .customization-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 14px;
+            border-radius: 6px;
+        }
     </style>
 </head>
 <body>
@@ -300,6 +384,55 @@
                         ⚡ Gerar Contas
                     </button>
                 </form>
+                
+                <div class="storage-info">
+                    💾 Dados mantidos durante a sessão (localStorage funciona no GitHub Pages)
+                </div>
+            </section>
+
+            <!-- Seção de Personalização -->
+            <section class="card customization-section">
+                <button class="customization-toggle" id="customizationToggle">
+                    <span id="toggleIcon">⚙️</span>
+                    <span id="toggleText">Personalizar Template</span>
+                </button>
+                
+                <div class="customization-content" id="customizationContent">
+                    <h3 style="color: var(--playstation-blue); margin-bottom: 15px;">🎨 Configurações do Template</h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="customTitle">🏷️ Título da Ativação</label>
+                            <input type="text" id="customTitle" placeholder="Ativação Psn Deluxe">
+                        </div>
+                        <div class="form-group">
+                            <label for="customPassword">🔒 Senha</label>
+                            <input type="text" id="customPassword" placeholder="Lostggmax2026">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="customBirthdate">📅 Data de Nascimento</label>
+                            <input type="text" id="customBirthdate" placeholder="12/03/2000" pattern="\d{2}/\d{2}/\d{4}">
+                        </div>
+                        <div class="form-group">
+                            <label for="customEmailPrefix">📧 Prefixo do E-mail</label>
+                            <input type="text" id="customEmailPrefix" placeholder="zyxemstore77">
+                        </div>
+                    </div>
+                    
+                    <div class="customization-buttons">
+                        <button type="button" class="btn btn-secondary btn-small" id="restoreDefaultsBtn">
+                            🔄 Restaurar Padrões
+                        </button>
+                        <button type="button" class="btn btn-primary btn-small" id="previewTemplateBtn">
+                            👁️ Visualizar Template
+                        </button>
+                    </div>
+                    
+                    <div class="template-preview" id="templatePreview" style="display: none;"></div>
+                </div>
             </section>
 
             <!-- Seção dos Resultados -->
@@ -336,6 +469,14 @@
                 this.bindEvents();
                 this.generatedAccounts = '';
                 this.accountCount = 0;
+                this.defaultSettings = {
+                    title: 'Ativação Psn Deluxe',
+                    password: 'Lostggmax2026',
+                    birthdate: '12/03/2000',
+                    emailPrefix: 'zyxemstore77'
+                };
+                this.loadSavedData();
+                this.updateTemplatePreview();
             }
 
             initializeElements() {
@@ -352,6 +493,19 @@
                 this.errorMessage = document.getElementById('errorMessage');
                 this.successMessage = document.getElementById('successMessage');
                 this.accountsCount = document.getElementById('accountsCount');
+                
+                // Elementos de personalização
+                this.customizationToggle = document.getElementById('customizationToggle');
+                this.customizationContent = document.getElementById('customizationContent');
+                this.toggleIcon = document.getElementById('toggleIcon');
+                this.toggleText = document.getElementById('toggleText');
+                this.customTitle = document.getElementById('customTitle');
+                this.customPassword = document.getElementById('customPassword');
+                this.customBirthdate = document.getElementById('customBirthdate');
+                this.customEmailPrefix = document.getElementById('customEmailPrefix');
+                this.restoreDefaultsBtn = document.getElementById('restoreDefaultsBtn');
+                this.previewTemplateBtn = document.getElementById('previewTemplateBtn');
+                this.templatePreview = document.getElementById('templatePreview');
             }
 
             bindEvents() {
@@ -360,9 +514,25 @@
                 this.downloadBtn.addEventListener('click', () => this.downloadTxt());
                 this.clearBtn.addEventListener('click', () => this.clearResults());
                 
-                // Validação em tempo real
+                // Eventos de personalização
+                this.customizationToggle.addEventListener('click', () => this.toggleCustomization());
+                this.restoreDefaultsBtn.addEventListener('click', () => this.restoreDefaults());
+                this.previewTemplateBtn.addEventListener('click', () => this.showTemplatePreview());
+                
+                // Validação em tempo real e auto-save
                 [this.dayInput, this.monthInput, this.startNumInput, this.endNumInput].forEach(input => {
-                    input.addEventListener('input', () => this.clearFieldError(input));
+                    input.addEventListener('input', () => {
+                        this.clearFieldError(input);
+                        this.saveFormData();
+                    });
+                });
+                
+                // Auto-save para campos de personalização
+                [this.customTitle, this.customPassword, this.customBirthdate, this.customEmailPrefix].forEach(input => {
+                    input.addEventListener('input', () => {
+                        this.saveCustomizationData();
+                        this.updateTemplatePreview();
+                    });
                 });
             }
 
@@ -378,6 +548,11 @@
                 this.hideMessages();
                 let isValid = true;
                 let errors = [];
+                
+                // Validar campos personalizados
+                if (!this.validateCustomFields()) {
+                    return false;
+                }
 
                 const day = parseInt(this.dayInput.value);
                 const month = parseInt(this.monthInput.value);
@@ -450,14 +625,16 @@
                     try {
                         let accounts = [];
                         
+                        const settings = this.getCurrentSettings();
+                        
                         for (let i = startNum; i <= endNum; i++) {
                             const dayFormatted = day.toString().padStart(2, '0');
                             const monthFormatted = month.toString().padStart(2, '0');
                             const numFormatted = i.toString().padStart(2, '0');
                             
-                            const email = `zyxemstore77+${dayFormatted}${monthFormatted}${numFormatted}@gmail.com`;
+                            const email = `${settings.emailPrefix}+${dayFormatted}${monthFormatted}${numFormatted}@gmail.com`;
                             
-                            const account = `:PlaystationWhite: Ativação Psn Deluxe\n\n:envelope: E-mail da conta: ${email}\n:lock: Senha da conta: Lostggmax2026\n:calendar_spiral: Nascimento da conta: 12/03/2000`;
+                            const account = `:PlaystationWhite: ${settings.title}\n\n:envelope: E-mail da conta: ${email}\n:lock: Senha da conta: ${settings.password}\n:calendar_spiral: Nascimento da conta: ${settings.birthdate}`;
                             
                             accounts.push(account);
                         }
@@ -569,6 +746,134 @@
             hideMessages() {
                 this.errorMessage.style.display = 'none';
                 this.successMessage.style.display = 'none';
+            }
+            
+            // Simulação de persistência (localStorage será adicionado na versão do GitHub)
+            saveFormData() {
+                // Salva no estado da aplicação (localStorage funcionará no GitHub Pages)
+                this.savedFormData = {
+                    dia: this.dayInput.value || '',
+                    mes: this.monthInput.value || '',
+                    inicial: this.startNumInput.value || '',
+                    final: this.endNumInput.value || ''
+                };
+            }
+            
+            saveCustomizationData() {
+                // Salva no estado da aplicação (localStorage funcionará no GitHub Pages)
+                this.savedCustomData = {
+                    titulo: this.customTitle.value || '',
+                    senha: this.customPassword.value || '',
+                    nascimento: this.customBirthdate.value || '',
+                    prefixo: this.customEmailPrefix.value || ''
+                };
+            }
+            
+            loadSavedData() {
+                // Inicializa os dados salvos
+                this.savedFormData = this.savedFormData || {};
+                this.savedCustomData = this.savedCustomData || {};
+                
+                // Carrega dados do formulário (se existirem)
+                this.dayInput.value = this.savedFormData.dia || '';
+                this.monthInput.value = this.savedFormData.mes || '';
+                this.startNumInput.value = this.savedFormData.inicial || '';
+                this.endNumInput.value = this.savedFormData.final || '';
+                
+                // Carrega dados de personalização
+                this.customTitle.value = this.savedCustomData.titulo || this.defaultSettings.title;
+                this.customPassword.value = this.savedCustomData.senha || this.defaultSettings.password;
+                this.customBirthdate.value = this.savedCustomData.nascimento || this.defaultSettings.birthdate;
+                this.customEmailPrefix.value = this.savedCustomData.prefixo || this.defaultSettings.emailPrefix;
+            }
+            
+            setDefaultValues() {
+                this.customTitle.value = this.defaultSettings.title;
+                this.customPassword.value = this.defaultSettings.password;
+                this.customBirthdate.value = this.defaultSettings.birthdate;
+                this.customEmailPrefix.value = this.defaultSettings.emailPrefix;
+            }
+            
+            // Funções de personalização
+            toggleCustomization() {
+                const isExpanded = this.customizationContent.classList.toggle('expanded');
+                
+                if (isExpanded) {
+                    this.toggleIcon.textContent = '🔧';
+                    this.toggleText.textContent = 'Fechar Personalização';
+                } else {
+                    this.toggleIcon.textContent = '⚙️';
+                    this.toggleText.textContent = 'Personalizar Template';
+                    this.templatePreview.style.display = 'none';
+                }
+            }
+            
+            getCurrentSettings() {
+                return {
+                    title: this.customTitle.value || this.defaultSettings.title,
+                    password: this.customPassword.value || this.defaultSettings.password,
+                    birthdate: this.customBirthdate.value || this.defaultSettings.birthdate,
+                    emailPrefix: this.customEmailPrefix.value || this.defaultSettings.emailPrefix
+                };
+            }
+            
+            restoreDefaults() {
+                this.customTitle.value = this.defaultSettings.title;
+                this.customPassword.value = this.defaultSettings.password;
+                this.customBirthdate.value = this.defaultSettings.birthdate;
+                this.customEmailPrefix.value = this.defaultSettings.emailPrefix;
+                
+                this.saveCustomizationData();
+                this.updateTemplatePreview();
+                this.showSuccess('Configurações restauradas para os valores padrão!');
+            }
+            
+            updateTemplatePreview() {
+                const settings = this.getCurrentSettings();
+                const preview = `:PlaystationWhite: ${settings.title}
+
+:envelope: E-mail da conta: ${settings.emailPrefix}+[DDMM][NN]@gmail.com
+:lock: Senha da conta: ${settings.password}
+:calendar_spiral: Nascimento da conta: ${settings.birthdate}`;
+                
+                this.templatePreview.textContent = preview;
+            }
+            
+            showTemplatePreview() {
+                this.updateTemplatePreview();
+                
+                if (this.templatePreview.style.display === 'none') {
+                    this.templatePreview.style.display = 'block';
+                    this.previewTemplateBtn.textContent = '👁️ Ocultar Preview';
+                } else {
+                    this.templatePreview.style.display = 'none';
+                    this.previewTemplateBtn.textContent = '👁️ Visualizar Template';
+                }
+            }
+            
+            validateCustomFields() {
+                let isValid = true;
+                let errors = [];
+                
+                // Validar prefixo do email
+                const emailPrefix = this.customEmailPrefix.value.trim();
+                if (emailPrefix && !/^[a-zA-Z0-9]+$/.test(emailPrefix)) {
+                    errors.push('Prefixo do e-mail deve conter apenas letras e números');
+                    isValid = false;
+                }
+                
+                // Validar data de nascimento
+                const birthdate = this.customBirthdate.value.trim();
+                if (birthdate && !/^\d{2}\/\d{2}\/\d{4}$/.test(birthdate)) {
+                    errors.push('Data de nascimento deve estar no formato DD/MM/AAAA');
+                    isValid = false;
+                }
+                
+                if (!isValid) {
+                    this.showError(errors.join('\n'));
+                }
+                
+                return isValid;
             }
         }
 
