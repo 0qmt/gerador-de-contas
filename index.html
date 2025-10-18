@@ -3,15 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎮 Gerador de Contas PSN</title>
+    <title>🎮 Gerador de Contas Premium</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --playstation-blue: #003087;
-            --playstation-light-blue: #0070D1;
-            --playstation-white: #ffffff;
-            --playstation-gray: #f5f5f5;
-            --error-red: #e74c3c;
-            --success-green: #27ae60;
+            --transition-smooth: 0.6s ease-in-out;
+            --glassmorphism-bg: rgba(255, 255, 255, 0.15);
+            --glassmorphism-border: rgba(255, 255, 255, 0.3);
+            --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.2);
+            --border-radius: 20px;
+            --gap: 20px;
+            --toast-duration: 2000;
+            
+            /* Tema neutro inicial */
+            --current-primary: #6366f1;
+            --current-secondary: #a855f7;
+            --current-accent: #ec4899;
         }
 
         * {
@@ -20,70 +29,247 @@
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, var(--playstation-blue) 0%, var(--playstation-light-blue) 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
             min-height: 100vh;
             color: #333;
+            transition: all var(--transition-smooth);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animação do gradiente de fundo */
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Temas dinâmicos dos serviços */
+        /* TEMAS DINÂMICOS DOS SERVIÇOS - FUNCIONAIS */
+        body.theme-crunchyroll {
+            background: linear-gradient(135deg, #e8590c 0%, #F47521 50%, #FF8C42 100%) !important;
+            background-size: 400% 400% !important;
+            animation: gradientShift 8s ease infinite !important;
+            --current-primary: #F47521 !important;
+            --current-secondary: #FF8C42 !important;
+            --current-accent: #e8590c !important;
+        }
+
+        body.theme-spotify {
+            background: linear-gradient(135deg, #169c46 0%, #1DB954 50%, #1ED760 100%) !important;
+            background-size: 400% 400% !important;
+            animation: gradientShift 8s ease infinite !important;
+            --current-primary: #1DB954 !important;
+            --current-secondary: #1ED760 !important;
+            --current-accent: #169c46 !important;
+        }
+
+        body.theme-hbo-max {
+            background: linear-gradient(135deg, #5a189a 0%, #7B2CBF 50%, #9D4EDD 100%) !important;
+            background-size: 400% 400% !important;
+            animation: gradientShift 8s ease infinite !important;
+            --current-primary: #7B2CBF !important;
+            --current-secondary: #9D4EDD !important;
+            --current-accent: #5a189a !important;
+        }
+
+        body.theme-psn-deluxe {
+            background: linear-gradient(135deg, #001f54 0%, #003087 50%, #0070CC 100%) !important;
+            background-size: 400% 400% !important;
+            animation: gradientShift 8s ease infinite !important;
+            --current-primary: #003087 !important;
+            --current-secondary: #0070CC !important;
+            --current-accent: #001f54 !important;
+        }
+
+        body.theme-xbox-premium,
+        body.theme-xbox-ultimate {
+            background: linear-gradient(135deg, #0a5c0a 0%, #107C10 50%, #52B043 100%) !important;
+            background-size: 400% 400% !important;
+            animation: gradientShift 8s ease infinite !important;
+            --current-primary: #107C10 !important;
+            --current-secondary: #52B043 !important;
+            --current-accent: #0a5c0a !important;
+        }
+
+        body.theme-disney {
+            background: linear-gradient(135deg, #0a2885 0%, #113CCF 50%, #60A5FA 100%) !important;
+            background-size: 400% 400% !important;
+            animation: gradientShift 8s ease infinite !important;
+            --current-primary: #113CCF !important;
+            --current-secondary: #60A5FA !important;
+            --current-accent: #0a2885 !important;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
+            position: relative;
+            z-index: 1;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 30px;
-            color: var(--playstation-white);
+            margin-bottom: 40px;
+            color: white;
         }
 
         .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            letter-spacing: -0.02em;
         }
 
         .header p {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             opacity: 0.9;
+            font-weight: 400;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Glass morphism components */
+        .glass-card {
+            background: var(--glassmorphism-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glassmorphism-border);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-glass);
+            transition: all var(--transition-smooth);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.3);
         }
 
         .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: var(--gap);
+        }
+
+        /* Service Selector Section */
+        .service-selector {
+            padding: 24px;
+            margin-bottom: var(--gap);
+        }
+
+        .service-selector h2 {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .service-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .service-card {
+            background: var(--glassmorphism-bg);
+            backdrop-filter: blur(12px);
+            border: 2px solid transparent;
+            border-radius: 16px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .service-card:hover::before {
+            opacity: 1;
+        }
+
+        .service-card.selected {
+            border-color: var(--current-primary);
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 0 0 3px rgba(var(--current-primary), 0.3), 0 16px 32px rgba(0, 0, 0, 0.3);
+            transform: translateY(-4px);
+        }
+
+        .service-card-icon {
+            font-size: 3rem;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .service-card-title {
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .service-card-subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            font-weight: 400;
+        }
+
+        /* Main form and results layout */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: var(--gap);
             align-items: start;
         }
 
-        @media (max-width: 768px) {
-            .main-content {
+        @media (max-width: 1024px) {
+            .content-grid {
                 grid-template-columns: 1fr;
             }
         }
 
-        .card {
-            background: var(--playstation-white);
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-            border: 3px solid transparent;
-            transition: all 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 35px rgba(0,0,0,0.2);
+        .form-section {
+            padding: 24px;
+            position: sticky;
+            top: 20px;
         }
 
         .form-section h2 {
-            color: var(--playstation-blue);
+            color: white;
             margin-bottom: 20px;
             display: flex;
             align-items: center;
             gap: 10px;
             font-size: 1.5rem;
+            font-weight: 600;
         }
 
         .form-group {
@@ -93,23 +279,70 @@
         .form-group label {
             display: block;
             margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--playstation-blue);
+            font-weight: 500;
+            color: white;
+            font-size: 0.95rem;
         }
 
-        .form-group input {
+        .form-group input,
+        .form-group select {
             width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s ease;
+            padding: 12px 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            font-size: 15px;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            backdrop-filter: blur(8px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .form-group input:focus {
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
             outline: none;
-            border-color: var(--playstation-light-blue);
-            box-shadow: 0 0 0 3px rgba(0,112,209,0.1);
+            border-color: var(--current-primary);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .form-group select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 12px center;
+            background-repeat: no-repeat;
+            background-size: 16px;
+            padding-right: 40px;
+        }
+
+        .form-group select option {
+            background: #1a1a1a;
+            color: white;
+            padding: 8px;
+        }
+
+        .service-preview {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+        }
+
+        .template-preview-box {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            margin-top: 10px;
         }
 
         .form-group input.error {
@@ -144,28 +377,52 @@
         }
 
         .btn-primary {
-            background: var(--playstation-blue);
-            color: var(--playstation-white);
+            background: linear-gradient(135deg, var(--current-primary), var(--current-secondary));
+            color: white;
             width: 100%;
             justify-content: center;
-            margin-top: 10px;
+            margin-top: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 14px 24px;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s;
         }
 
         .btn-primary:hover {
-            background: var(--playstation-light-blue);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,48,135,0.3);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:active {
+            transform: translateY(-1px) scale(1.01);
         }
 
         .btn-secondary {
-            background: var(--playstation-gray);
-            color: var(--playstation-blue);
-            border: 2px solid var(--playstation-blue);
+            background: var(--gray);
+            color: var(--primary-blue);
+            border: 2px solid var(--primary-blue);
         }
 
         .btn-secondary:hover {
-            background: var(--playstation-blue);
-            color: var(--playstation-white);
+            background: var(--primary-blue);
+            color: var(--white);
         }
 
         .btn-success {
@@ -177,48 +434,186 @@
             background: #219a52;
         }
 
-        .results-section h2 {
-            color: var(--playstation-blue);
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.5rem;
+        /* Results Section */
+        .results-section {
+            padding: 0;
         }
 
-        .results-area {
-            background: #f8f9fa;
-            border: 2px solid #e9ecef;
+        .results-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .results-header h2 {
+            color: white;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .results-subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+        }
+
+        .accounts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: var(--gap);
+            margin-bottom: 30px;
+        }
+
+        .account-card {
+            background: var(--glassmorphism-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glassmorphism-border);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .account-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--current-primary), var(--current-secondary));
+        }
+
+        .account-card:hover {
+            transform: translateY(-6px) scale(1.03);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .account-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .account-card-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .account-field {
+            margin-bottom: 16px;
+        }
+
+        .account-field-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+
+        .account-field-value {
+            color: white;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.95rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 12px;
             border-radius: 8px;
-            padding: 20px;
-            min-height: 300px;
-            max-height: 500px;
-            overflow-y: auto;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            line-height: 1.6;
-            white-space: pre-wrap;
-            color: #333;
-            margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            word-break: break-all;
         }
 
-        .results-area.empty {
+        .btn-copy-individual {
+            background: linear-gradient(135deg, var(--current-primary), var(--current-secondary));
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
+            gap: 6px;
+            width: 100%;
             justify-content: center;
-            color: #6c757d;
-            font-style: italic;
+            margin-top: 8px;
         }
 
-        .button-group {
+        .btn-copy-individual:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            filter: brightness(1.1);
+        }
+
+        .btn-copy-individual:active {
+            transform: translateY(0);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .empty-state-text {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+        }
+
+        .empty-state-subtitle {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        /* Global Actions */
+        .global-actions {
             display: flex;
-            gap: 10px;
+            gap: 12px;
+            justify-content: center;
             flex-wrap: wrap;
+            margin-top: 30px;
         }
 
-        .button-group .btn {
-            flex: 1;
-            min-width: 120px;
+        .global-actions .btn {
+            min-width: 160px;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--current-primary), var(--current-secondary));
+            color: white;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
         }
 
         .error-message {
@@ -247,36 +642,147 @@
         }
 
         .accounts-count {
-            background: var(--playstation-light-blue);
-            color: var(--playstation-white);
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 14px;
+            background: linear-gradient(135deg, var(--current-primary), var(--current-secondary));
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 0.95rem;
             font-weight: 600;
             display: inline-block;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
 
-        .storage-info {
-            text-align: center;
-            font-size: 12px;
-            color: #666;
-            margin-top: 15px;
-            opacity: 0.8;
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            transform: translateX(400px);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
         }
 
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.success {
+            border-left: 4px solid #22c55e;
+        }
+
+        .toast.error {
+            border-left: 4px solid #ef4444;
+        }
+
+        /* Loading states */
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .skeleton-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 0.5;
+            }
+            50% {
+                opacity: 0.8;
+            }
+        }
+
+        .skeleton-line {
+            background: rgba(255, 255, 255, 0.2);
+            height: 16px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .skeleton-line.short {
+            width: 60%;
+        }
+
+        .skeleton-line.medium {
+            width: 80%;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .service-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 12px;
+            }
+            
+            .accounts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .global-actions {
+                flex-direction: column;
+            }
+            
+            .global-actions .btn {
+                width: 100%;
+            }
+            
+            .toast {
+                top: 10px;
+                right: 10px;
+                left: 10px;
+                transform: translateY(-100px);
+            }
+            
+            .toast.show {
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .service-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .account-card {
+                padding: 20px;
+            }
+        }
+
+        /* Customization Section */
         .customization-section {
-            margin: 20px 0;
-            border-top: 2px solid #e0e0e0;
-            padding-top: 20px;
+            padding: 24px;
+            margin-top: var(--gap);
         }
 
         .customization-toggle {
-            background: var(--playstation-gray);
-            color: var(--playstation-blue);
-            border: 2px solid var(--playstation-blue);
-            padding: 10px 20px;
-            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 12px 20px;
+            border-radius: 12px;
             cursor: pointer;
             font-weight: 600;
             transition: all 0.3s ease;
@@ -284,258 +790,407 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            width: 100%;
         }
 
         .customization-toggle:hover {
-            background: var(--playstation-blue);
-            color: var(--playstation-white);
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
         }
 
         .customization-content {
             display: none;
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 20px;
-            border: 2px solid #e9ecef;
+            animation: slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .customization-content.expanded {
             display: block;
-            animation: slideDown 0.3s ease;
         }
 
         @keyframes slideDown {
             from {
                 opacity: 0;
-                max-height: 0;
+                transform: translateY(-20px);
             }
             to {
                 opacity: 1;
-                max-height: 500px;
+                transform: translateY(0);
             }
-        }
-
-        .template-preview {
-            background: #ffffff;
-            border: 1px solid #dee2e6;
-            border-radius: 6px;
-            padding: 15px;
-            font-family: 'Courier New', monospace;
-            font-size: 13px;
-            line-height: 1.5;
-            margin-top: 15px;
-            white-space: pre-wrap;
         }
 
         .customization-buttons {
             display: flex;
-            gap: 10px;
-            margin-top: 15px;
+            gap: 12px;
+            margin-top: 20px;
             flex-wrap: wrap;
         }
 
         .btn-small {
-            padding: 8px 16px;
-            font-size: 14px;
-            border-radius: 6px;
+            padding: 10px 16px;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            flex: 1;
+            min-width: 140px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header class="header">
-            <h1>🎮 Gerador de Contas PSN</h1>
-            <p>Interface simples para gerar e gerenciar contas PlayStation Network</p>
+            <h1>🎮 Gerador de Contas Premium</h1>
+            <p>Interface premium com temas dinâmicos para PlayStation, Xbox, Disney+, HBO Max, Crunchyroll e Spotify</p>
         </header>
 
+        <!-- Service Selector -->
+        <section class="service-selector glass-card">
+            <h2>🎯 Escolha o Serviço</h2>
+            <div class="service-grid" id="serviceGrid">
+                <div class="service-card" onclick="app.selectService('psn-deluxe')" data-service="psn-deluxe">
+                    <span class="service-card-icon">🎮</span>
+                    <div class="service-card-title">PlayStation Network</div>
+                    <div class="service-card-subtitle">Deluxe</div>
+                </div>
+                <div class="service-card" onclick="app.selectService('xbox-premium')" data-service="xbox-premium">
+                    <span class="service-card-icon">🎯</span>
+                    <div class="service-card-title">Xbox Game Pass</div>
+                    <div class="service-card-subtitle">Premium</div>
+                </div>
+                <div class="service-card" onclick="app.selectService('xbox-ultimate')" data-service="xbox-ultimate">
+                    <span class="service-card-icon">⭐</span>
+                    <div class="service-card-title">Xbox Game Pass</div>
+                    <div class="service-card-subtitle">Ultimate</div>
+                </div>
+                <div class="service-card" onclick="app.selectService('disney')" data-service="disney">
+                    <span class="service-card-icon">✨</span>
+                    <div class="service-card-title">Disney+</div>
+                    <div class="service-card-subtitle">Premium</div>
+                </div>
+                <div class="service-card" onclick="app.selectService('hbo-max')" data-service="hbo-max">
+                    <span class="service-card-icon">🎬</span>
+                    <div class="service-card-title">HBO Max</div>
+                    <div class="service-card-subtitle">Premium</div>
+                </div>
+                <div class="service-card" onclick="app.selectService('crunchyroll')" data-service="crunchyroll">
+                    <span class="service-card-icon">🍥</span>
+                    <div class="service-card-title">Crunchyroll</div>
+                    <div class="service-card-subtitle">Premium</div>
+                </div>
+                <div class="service-card" onclick="app.selectService('spotify')" data-service="spotify">
+                    <span class="service-card-icon">🎵</span>
+                    <div class="service-card-title">Spotify</div>
+                    <div class="service-card-subtitle">Premium</div>
+                </div>
+            </div>
+        </section>
+
         <main class="main-content">
-            <!-- Seção do Formulário -->
-            <section class="card form-section">
-                <h2>⚙️ Configurações</h2>
-                
-                <div class="error-message" id="errorMessage"></div>
-                <div class="success-message" id="successMessage"></div>
+            <div class="content-grid">
+                <!-- Form Section -->
+                <section class="form-section glass-card">
+                    <h2>⚙️ Configurações</h2>
+                    
+                    <form id="accountForm">
+                        <div class="form-group">
+                            <label for="emailProvider">📧 Provedor de E-mail</label>
+                            <select id="emailProvider" required>
+                                <option value="">Selecione o provedor...</option>
+                                <option value="gmail.com">Gmail (@gmail.com)</option>
+                                <option value="outlook.com">Outlook (@outlook.com)</option>
+                                <option value="hotmail.com">Hotmail (@hotmail.com)</option>
+                            </select>
+                        </div>
 
-                <form id="accountForm">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="day">📅 Dia</label>
-                            <input type="number" id="day" min="1" max="31" placeholder="Ex: 14" required>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="day">📅 Dia</label>
+                                <input type="number" id="day" min="1" max="31" placeholder="14" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="month">📅 Mês</label>
+                                <input type="number" id="month" min="1" max="12" placeholder="10" required>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="month">📅 Mês</label>
-                            <input type="number" id="month" min="1" max="12" placeholder="Ex: 10" required>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="startNum">🔢 Inicial</label>
+                                <input type="number" id="startNum" min="1" placeholder="1" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="endNum">🔢 Final</label>
+                                <input type="number" id="endNum" min="1" placeholder="5" required>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="startNum">🔢 Número Inicial</label>
-                            <input type="number" id="startNum" min="1" placeholder="Ex: 3" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="endNum">🔢 Número Final</label>
-                            <input type="number" id="endNum" min="1" placeholder="Ex: 10" required>
-                        </div>
-                    </div>
 
-                    <button type="submit" class="btn btn-primary" id="generateBtn">
-                        ⚡ Gerar Contas
-                    </button>
-                </form>
-                
-                <div class="storage-info">
-                    💾 Dados mantidos durante a sessão (localStorage funciona no GitHub Pages)
-                </div>
-            </section>
-
-            <!-- Seção de Personalização -->
-            <section class="card customization-section">
-                <button class="customization-toggle" id="customizationToggle">
-                    <span id="toggleIcon">⚙️</span>
-                    <span id="toggleText">Personalizar Template</span>
-                </button>
-                
-                <div class="customization-content" id="customizationContent">
-                    <h3 style="color: var(--playstation-blue); margin-bottom: 15px;">🎨 Configurações do Template</h3>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="customTitle">🏷️ Título da Ativação</label>
-                            <input type="text" id="customTitle" placeholder="Ativação Psn Deluxe">
-                        </div>
-                        <div class="form-group">
-                            <label for="customPassword">🔒 Senha</label>
-                            <input type="text" id="customPassword" placeholder="Lostggmax2026">
-                        </div>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="customBirthdate">📅 Data de Nascimento</label>
-                            <input type="text" id="customBirthdate" placeholder="12/03/2000" pattern="\d{2}/\d{2}/\d{4}">
-                        </div>
-                        <div class="form-group">
-                            <label for="customEmailPrefix">📧 Prefixo do E-mail</label>
-                            <input type="text" id="customEmailPrefix" placeholder="zyxemstore77">
-                        </div>
-                    </div>
-                    
-                    <div class="customization-buttons">
-                        <button type="button" class="btn btn-secondary btn-small" id="restoreDefaultsBtn">
-                            🔄 Restaurar Padrões
+                        <button type="submit" class="btn btn-primary" id="generateBtn">
+                            🚀 Gerar Contas
                         </button>
-                        <button type="button" class="btn btn-primary btn-small" id="previewTemplateBtn">
-                            👁️ Visualizar Template
+                    </form>
+                    
+                    <!-- Customization Section -->
+                    <div class="customization-section">
+                        <button type="button" class="customization-toggle" id="customizationToggle">
+                            <span id="toggleIcon">⚙️</span>
+                            <span id="toggleText">Personalizar Template</span>
                         </button>
+                        
+                        <div class="customization-content" id="customizationContent">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="customPassword">🔒 Senha</label>
+                                    <input type="text" id="customPassword" placeholder="Lostggmax2026">
+                                </div>
+                                <div class="form-group">
+                                    <label for="customBirthdate">📅 Nascimento</label>
+                                    <input type="text" id="customBirthdate" placeholder="12/03/2000">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="customEmailPrefix">📧 Prefixo do E-mail</label>
+                                <input type="text" id="customEmailPrefix" placeholder="zyxemstore77">
+                            </div>
+                            
+                            <div class="customization-buttons">
+                                <button type="button" class="btn btn-secondary btn-small" id="restoreDefaultsBtn">
+                                    🔄 Restaurar
+                                </button>
+                                <button type="button" class="btn btn-primary btn-small" id="previewTemplateBtn">
+                                    👁️ Preview
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Results Section -->
+                <section class="results-section">
+                    <div class="results-header">
+                        <h2>✨ Contas Geradas</h2>
+                        <p class="results-subtitle">Copie cada conta individualmente ou todas de uma vez</p>
+                        
+                        <div id="accountsCount" class="accounts-count" style="display: none;">
+                            0 contas geradas
+                        </div>
+                    </div>
+
+                    <div id="accountsGrid" class="accounts-grid">
+                        <!-- Cards de contas aparecerão aqui -->
                     </div>
                     
-                    <div class="template-preview" id="templatePreview" style="display: none;"></div>
-                </div>
-            </section>
+                    <div id="emptyState" class="empty-state">
+                        <div class="empty-state-icon">🎮</div>
+                        <div class="empty-state-text">Pronto para gerar!</div>
+                        <div class="empty-state-subtitle">Escolha um serviço e configure os parâmetros</div>
+                    </div>
 
-            <!-- Seção dos Resultados -->
-            <section class="card results-section">
-                <h2>📋 Contas Geradas</h2>
-                
-                <div id="accountsCount" class="accounts-count" style="display: none;">
-                    0 contas geradas
-                </div>
-
-                <div id="resultsArea" class="results-area empty">
-                    Preencha o formulário e clique em "Gerar Contas" para ver os resultados aqui.
-                </div>
-
-                <div class="button-group">
-                    <button type="button" class="btn btn-success" id="copyBtn" disabled>
-                        📋 Copiar Tudo
-                    </button>
-                    <button type="button" class="btn btn-secondary" id="downloadBtn" disabled>
-                        💾 Baixar TXT
-                    </button>
-                    <button type="button" class="btn btn-secondary" id="clearBtn" disabled>
-                        🗑️ Limpar
-                    </button>
-                </div>
-            </section>
+                    <div class="global-actions" id="globalActions" style="display: none;">
+                        <button type="button" class="btn btn-success" id="copyAllBtn">
+                            📋 Copiar Todas
+                        </button>
+                        <button type="button" class="btn btn-secondary" id="downloadBtn">
+                            💾 Baixar TXT
+                        </button>
+                        <button type="button" class="btn btn-secondary" id="clearBtn">
+                            🗑️ Limpar
+                        </button>
+                    </div>
+                </section>
+            </div>
         </main>
     </div>
 
+    <!-- Toast Container -->
+    <div id="toastContainer"></div>
+
     <script>
-        class PSNAccountGenerator {
+        class PremiumAccountGenerator {
             constructor() {
                 this.initializeElements();
                 this.bindEvents();
-                this.generatedAccounts = '';
+                this.generatedAccounts = [];
                 this.accountCount = 0;
+                this.selectedService = null;
+                this.toastQueue = [];
+                
                 this.defaultSettings = {
-                    title: 'Ativação Psn Deluxe',
                     password: 'Lostggmax2026',
                     birthdate: '12/03/2000',
                     emailPrefix: 'zyxemstore77'
                 };
-                this.loadSavedData();
-                this.updateTemplatePreview();
+                
+                this.serviceData = {
+                    'psn-deluxe': {
+                        name: 'PlayStation Network Deluxe',
+                        icon: '🎮',
+                        discordIcon: ':PlaystationWhite:',
+                        title: 'Ativação Psn Deluxe',
+                        themeClass: 'theme-psn-deluxe',
+                        fields: ['email', 'password', 'birthdate']
+                    },
+                    'xbox-premium': {
+                        name: 'Xbox Game Pass Premium',
+                        icon: '🎯',
+                        discordIcon: ':Xbox_360:',
+                        title: 'XBOX GAME PASS PREMIUM',
+                        themeClass: 'theme-xbox-premium',
+                        fields: ['email', 'password']
+                    },
+                    'xbox-ultimate': {
+                        name: 'Xbox Game Pass Ultimate',
+                        icon: '⭐',
+                        discordIcon: ':Xbox_360:',
+                        title: 'XBOX GAME PASS ULTIMATE', 
+                        themeClass: 'theme-xbox-ultimate',
+                        fields: ['email', 'password']
+                    },
+                    'disney': {
+                        name: 'Disney+',
+                        icon: '✨',
+                        discordIcon: ':disney:',
+                        title: 'DISNEY+',
+                        themeClass: 'theme-disney',
+                        fields: ['email', 'password']
+                    },
+                    'hbo-max': {
+                        name: 'HBO Max',
+                        icon: '🎬',
+                        discordIcon: ':max:',
+                        title: 'HBO MAX',
+                        themeClass: 'theme-hbo-max',
+                        fields: ['email', 'password']
+                    },
+                    'crunchyroll': {
+                        name: 'Crunchyroll',
+                        icon: '🍥',
+                        discordIcon: ':crunchyroll:',
+                        title: 'CRUNCHYROLL',
+                        themeClass: 'theme-crunchyroll',
+                        fields: ['email', 'password']
+                    },
+                    'spotify': {
+                        name: 'Spotify',
+                        icon: '🎵',
+                        discordIcon: ':spotify:',
+                        title: 'SPOTIFY',
+                        themeClass: 'theme-spotify',
+                        fields: ['email', 'password']
+                    }
+                };
+                
+                // In-memory storage (localStorage não funciona no ambiente sandboxed)
+                this.savedFormData = {};
+                this.savedCustomData = {};
+                
+                this.initializeDefaults();
             }
 
             initializeElements() {
+                // Form elements
                 this.form = document.getElementById('accountForm');
                 this.dayInput = document.getElementById('day');
                 this.monthInput = document.getElementById('month');
                 this.startNumInput = document.getElementById('startNum');
                 this.endNumInput = document.getElementById('endNum');
                 this.generateBtn = document.getElementById('generateBtn');
-                this.resultsArea = document.getElementById('resultsArea');
-                this.copyBtn = document.getElementById('copyBtn');
+                this.emailProviderSelect = document.getElementById('emailProvider');
+                
+                // Service selection
+                this.serviceGrid = document.getElementById('serviceGrid');
+                this.serviceCards = document.querySelectorAll('.service-card');
+                
+                // Results
+                this.accountsGrid = document.getElementById('accountsGrid');
+                this.emptyState = document.getElementById('emptyState');
+                this.accountsCount = document.getElementById('accountsCount');
+                this.globalActions = document.getElementById('globalActions');
+                this.copyAllBtn = document.getElementById('copyAllBtn');
                 this.downloadBtn = document.getElementById('downloadBtn');
                 this.clearBtn = document.getElementById('clearBtn');
-                this.errorMessage = document.getElementById('errorMessage');
-                this.successMessage = document.getElementById('successMessage');
-                this.accountsCount = document.getElementById('accountsCount');
                 
-                // Elementos de personalização
+                // Customization
                 this.customizationToggle = document.getElementById('customizationToggle');
                 this.customizationContent = document.getElementById('customizationContent');
                 this.toggleIcon = document.getElementById('toggleIcon');
                 this.toggleText = document.getElementById('toggleText');
-                this.customTitle = document.getElementById('customTitle');
                 this.customPassword = document.getElementById('customPassword');
                 this.customBirthdate = document.getElementById('customBirthdate');
                 this.customEmailPrefix = document.getElementById('customEmailPrefix');
                 this.restoreDefaultsBtn = document.getElementById('restoreDefaultsBtn');
                 this.previewTemplateBtn = document.getElementById('previewTemplateBtn');
-                this.templatePreview = document.getElementById('templatePreview');
+                
+                // Toast
+                this.toastContainer = document.getElementById('toastContainer');
             }
 
             bindEvents() {
+                // Form events
                 this.form.addEventListener('submit', (e) => this.handleGenerate(e));
-                this.copyBtn.addEventListener('click', () => this.copyToClipboard());
+                
+                // Service selection events
+                this.serviceCards.forEach(card => {
+                    card.addEventListener('click', () => {
+                        const service = card.dataset.service;
+                        this.selectService(service);
+                    });
+                });
+                
+                // Global action events
+                this.copyAllBtn.addEventListener('click', () => this.copyAllAccounts());
                 this.downloadBtn.addEventListener('click', () => this.downloadTxt());
                 this.clearBtn.addEventListener('click', () => this.clearResults());
                 
-                // Eventos de personalização
+                // Customization events
                 this.customizationToggle.addEventListener('click', () => this.toggleCustomization());
                 this.restoreDefaultsBtn.addEventListener('click', () => this.restoreDefaults());
-                this.previewTemplateBtn.addEventListener('click', () => this.showTemplatePreview());
                 
-                // Validação em tempo real e auto-save
-                [this.dayInput, this.monthInput, this.startNumInput, this.endNumInput].forEach(input => {
-                    input.addEventListener('input', () => {
-                        this.clearFieldError(input);
-                        this.saveFormData();
-                    });
+                // Input validation and auto-save
+                [this.dayInput, this.monthInput, this.startNumInput, this.endNumInput, this.emailProviderSelect].forEach(input => {
+                    input.addEventListener('input', () => this.saveFormData());
+                    input.addEventListener('change', () => this.saveFormData());
                 });
                 
-                // Auto-save para campos de personalização
-                [this.customTitle, this.customPassword, this.customBirthdate, this.customEmailPrefix].forEach(input => {
-                    input.addEventListener('input', () => {
-                        this.saveCustomizationData();
-                        this.updateTemplatePreview();
-                    });
+                [this.customPassword, this.customBirthdate, this.customEmailPrefix].forEach(input => {
+                    input.addEventListener('input', () => this.saveCustomizationData());
                 });
             }
 
+            selectService(serviceKey) {
+                console.log('Selecting service:', serviceKey);
+                
+                // Remove previous selection
+                this.serviceCards.forEach(card => card.classList.remove('selected'));
+                
+                // Add selection to clicked card
+                const selectedCard = document.querySelector(`[data-service="${serviceKey}"]`);
+                if (selectedCard) {
+                    selectedCard.classList.add('selected');
+                    this.selectedService = serviceKey;
+                    
+                    // Apply theme transition - CRITICAL FIX
+                    this.applyTheme(serviceKey);
+                    
+                    this.saveFormData();
+                    this.showToast(`${this.serviceData[serviceKey].name} selecionado!`, 'success');
+                }
+            }
+            
+            applyTheme(serviceKey) {
+                console.log('Applying theme for:', serviceKey);
+                const service = this.serviceData[serviceKey];
+                if (service) {
+                    // Remove all theme classes FIRST
+                    document.body.className = document.body.className.replace(/theme-[\w-]+/g, '');
+                    
+                    // Add new theme class with slight delay for smooth transition
+                    setTimeout(() => {
+                        document.body.classList.add(service.themeClass);
+                        console.log('Theme applied:', service.themeClass);
+                    }, 50);
+                }
+            }
+            
             handleGenerate(e) {
                 e.preventDefault();
                 
@@ -545,13 +1200,19 @@
             }
 
             validateForm() {
-                this.hideMessages();
                 let isValid = true;
                 let errors = [];
                 
-                // Validar campos personalizados
-                if (!this.validateCustomFields()) {
-                    return false;
+                // Validate service selection
+                if (!this.selectedService) {
+                    errors.push('Por favor, selecione um serviço');
+                    isValid = false;
+                }
+                
+                // Validate email provider
+                if (!this.emailProviderSelect.value) {
+                    errors.push('Por favor, selecione um provedor de e-mail');
+                    isValid = false;
                 }
 
                 const day = parseInt(this.dayInput.value);
@@ -559,53 +1220,34 @@
                 const startNum = parseInt(this.startNumInput.value);
                 const endNum = parseInt(this.endNumInput.value);
 
-                // Validar campos obrigatórios
-                if (!day) {
-                    this.showFieldError(this.dayInput);
-                    errors.push('Dia é obrigatório');
-                    isValid = false;
-                }
-
-                if (!month) {
-                    this.showFieldError(this.monthInput);
-                    errors.push('Mês é obrigatório');
-                    isValid = false;
-                }
-
-                if (!startNum) {
-                    this.showFieldError(this.startNumInput);
-                    errors.push('Número inicial é obrigatório');
-                    isValid = false;
-                }
-
-                if (!endNum) {
-                    this.showFieldError(this.endNumInput);
-                    errors.push('Número final é obrigatório');
-                    isValid = false;
-                }
-
-                // Validar intervalos
-                if (day && (day < 1 || day > 31)) {
-                    this.showFieldError(this.dayInput);
+                // Validate required fields
+                if (!day || day < 1 || day > 31) {
                     errors.push('Dia deve estar entre 1 e 31');
                     isValid = false;
                 }
 
-                if (month && (month < 1 || month > 12)) {
-                    this.showFieldError(this.monthInput);
+                if (!month || month < 1 || month > 12) {
                     errors.push('Mês deve estar entre 1 e 12');
                     isValid = false;
                 }
 
+                if (!startNum || startNum < 1) {
+                    errors.push('Número inicial deve ser maior que 0');
+                    isValid = false;
+                }
+
+                if (!endNum || endNum < 1) {
+                    errors.push('Número final deve ser maior que 0');
+                    isValid = false;
+                }
+
                 if (startNum && endNum && startNum > endNum) {
-                    this.showFieldError(this.startNumInput);
-                    this.showFieldError(this.endNumInput);
                     errors.push('Número inicial deve ser menor ou igual ao final');
                     isValid = false;
                 }
 
                 if (!isValid) {
-                    this.showError(errors.join('\n'));
+                    this.showToast(errors.join('. '), 'error');
                 }
 
                 return isValid;
@@ -616,185 +1258,344 @@
                 const month = parseInt(this.monthInput.value);
                 const startNum = parseInt(this.startNumInput.value);
                 const endNum = parseInt(this.endNumInput.value);
+                const emailProvider = this.emailProviderSelect.value;
+                const settings = this.getCurrentSettings();
 
-                // Mostrar loading
+                // Show loading state
                 this.generateBtn.textContent = '⏳ Gerando...';
                 this.generateBtn.disabled = true;
+                this.generateBtn.classList.add('loading');
 
                 setTimeout(() => {
                     try {
-                        let accounts = [];
-                        
-                        const settings = this.getCurrentSettings();
+                        const accounts = [];
                         
                         for (let i = startNum; i <= endNum; i++) {
                             const dayFormatted = day.toString().padStart(2, '0');
                             const monthFormatted = month.toString().padStart(2, '0');
                             const numFormatted = i.toString().padStart(2, '0');
                             
-                            const email = `${settings.emailPrefix}+${dayFormatted}${monthFormatted}${numFormatted}@gmail.com`;
+                            const email = `${settings.emailPrefix}+${dayFormatted}${monthFormatted}${numFormatted}@${emailProvider}`;
                             
-                            const account = `:PlaystationWhite: ${settings.title}\n\n:envelope: E-mail da conta: ${email}\n:lock: Senha da conta: ${settings.password}\n:calendar_spiral: Nascimento da conta: ${settings.birthdate}`;
+                            const accountData = {
+                                number: i - startNum + 1,
+                                email: email,
+                                password: settings.password,
+                                birthdate: settings.birthdate,
+                                service: this.selectedService
+                            };
                             
-                            accounts.push(account);
+                            accounts.push(accountData);
                         }
 
-                        this.generatedAccounts = accounts.join('\n\n');
+                        this.generatedAccounts = accounts;
                         this.accountCount = accounts.length;
-                        this.displayResults();
-                        this.showSuccess(`${this.accountCount} contas geradas com sucesso!`);
+                        this.displayAccountCards();
+                        this.showToast(`✅ ${this.accountCount} contas geradas!`, 'success');
                         
                     } catch (error) {
-                        this.showError('Erro ao gerar contas. Tente novamente.');
+                        this.showToast('Erro ao gerar contas. Tente novamente.', 'error');
                     } finally {
-                        this.generateBtn.textContent = '⚡ Gerar Contas';
+                        this.generateBtn.textContent = '🚀 Gerar Contas';
                         this.generateBtn.disabled = false;
+                        this.generateBtn.classList.remove('loading');
                     }
-                }, 500);
+                }, 800);
             }
 
-            displayResults() {
-                this.resultsArea.textContent = this.generatedAccounts;
-                this.resultsArea.classList.remove('empty');
+            displayAccountCards() {
+                // Hide empty state and show results
+                this.emptyState.style.display = 'none';
+                this.globalActions.style.display = 'flex';
                 
-                // Mostrar contador
+                // Update counter
                 this.accountsCount.textContent = `${this.accountCount} contas geradas`;
                 this.accountsCount.style.display = 'inline-block';
                 
-                // Habilitar botões
-                this.copyBtn.disabled = false;
-                this.downloadBtn.disabled = false;
-                this.clearBtn.disabled = false;
+                // Clear previous cards
+                this.accountsGrid.innerHTML = '';
+                
+                // Create account cards with stagger animation
+                this.generatedAccounts.forEach((account, index) => {
+                    setTimeout(() => {
+                        const card = this.createAccountCard(account);
+                        this.accountsGrid.appendChild(card);
+                    }, index * 150); // Stagger delay
+                });
+            }
+            
+            createAccountCard(account) {
+                const service = this.serviceData[account.service];
+                const card = document.createElement('div');
+                card.className = 'account-card';
+                card.style.animation = 'slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards';
+                
+                let fieldsHTML = '';
+                
+                // Email field (always present)
+                fieldsHTML += `
+                    <div class="account-field">
+                        <div class="account-field-label">✉️ Email:</div>
+                        <div class="account-field-value">${account.email}</div>
+                    </div>
+                `;
+                
+                // Password field (always present)
+                fieldsHTML += `
+                    <div class="account-field">
+                        <div class="account-field-label">🔒 Senha:</div>
+                        <div class="account-field-value">${account.password}</div>
+                    </div>
+                `;
+                
+                // Birthdate field (only for PSN)
+                if (service.fields.includes('birthdate')) {
+                    fieldsHTML += `
+                        <div class="account-field">
+                            <div class="account-field-label">📅 Nascimento:</div>
+                            <div class="account-field-value">${account.birthdate}</div>
+                        </div>
+                    `;
+                }
+                
+                card.innerHTML = `
+                    <div class="account-card-header">
+                        <div class="account-card-title">
+                            ${service.icon} Conta #${String(account.number).padStart(2, '0')}
+                        </div>
+                    </div>
+                    ${fieldsHTML}
+                    <button class="btn-copy-individual" onclick="app.copyIndividualAccount(${account.number - 1})">
+                        📋 Copiar Esta Conta
+                    </button>
+                `;
+                
+                return card;
             }
 
-            async copyToClipboard() {
-                try {
-                    await navigator.clipboard.writeText(this.generatedAccounts);
-                    this.showSuccess('Contas copiadas para a área de transferência!');
-                } catch (error) {
-                    // Fallback para navegadores mais antigos
-                    const textarea = document.createElement('textarea');
-                    textarea.value = this.generatedAccounts;
-                    document.body.appendChild(textarea);
-                    textarea.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(textarea);
-                    this.showSuccess('Contas copiadas para a área de transferência!');
+            async copyIndividualAccount(index) {
+                console.log('Copying account index:', index);
+                const account = this.generatedAccounts[index];
+                if (!account) {
+                    console.error('Account not found at index:', index);
+                    return;
                 }
+                
+                const service = this.serviceData[account.service];
+                
+                let accountText = `${service.discordIcon} ${service.title}\n\n`;
+                accountText += `✉️ Email: ${account.email}\n`;
+                accountText += `🔒 Senha: ${account.password}\n`;
+                
+                if (service.fields.includes('birthdate')) {
+                    accountText += `📅 Nascimento: ${account.birthdate}\n`;
+                }
+                
+                try {
+                    await navigator.clipboard.writeText(accountText);
+                    this.showToast(`✅ Conta #${account.number} copiada!`, 'success');
+                    
+                    // Visual feedback on button
+                    const buttons = document.querySelectorAll('.btn-copy-individual');
+                    const button = buttons[index];
+                    if (button) {
+                        const originalText = button.textContent;
+                        button.style.transform = 'scale(0.95)';
+                        button.textContent = '✅ Copiado!';
+                        
+                        setTimeout(() => {
+                            button.style.transform = 'scale(1)';
+                            button.textContent = originalText;
+                        }, 1000);
+                    }
+                    
+                } catch (error) {
+                    console.error('Clipboard failed, using fallback:', error);
+                    this.fallbackCopy(accountText);
+                    this.showToast(`✅ Conta #${account.number} copiada!`, 'success');
+                }
+            }
+            
+            async copyAllAccounts() {
+                if (this.generatedAccounts.length === 0) {
+                    this.showToast('❌ Nenhuma conta para copiar!', 'error');
+                    return;
+                }
+                
+                let allAccountsText = '';
+                
+                this.generatedAccounts.forEach((account, index) => {
+                    const service = this.serviceData[account.service];
+                    
+                    allAccountsText += `${service.title} - Conta #${account.number}\n\n`;
+                    allAccountsText += `✉️ Email: ${account.email}\n`;
+                    allAccountsText += `🔒 Senha: ${account.password}\n`;
+                    
+                    if (service.fields.includes('birthdate')) {
+                        allAccountsText += `📅 Nascimento: ${account.birthdate}\n`;
+                    }
+                    
+                    if (index < this.generatedAccounts.length - 1) {
+                        allAccountsText += '\n' + '='.repeat(40) + '\n\n';
+                    }
+                });
+                
+                try {
+                    await navigator.clipboard.writeText(allAccountsText);
+                    this.showToast(`✅ Todas as ${this.accountCount} contas copiadas!`, 'success');
+                } catch (error) {
+                    console.error('Clipboard failed, using fallback:', error);
+                    this.fallbackCopy(allAccountsText);
+                    this.showToast(`✅ Todas as ${this.accountCount} contas copiadas!`, 'success');
+                }
+            }
+            
+            
+            fallbackCopy(text) {
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
             }
 
             downloadTxt() {
-                const blob = new Blob([this.generatedAccounts], { type: 'text/plain;charset=utf-8' });
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement('a');
+                if (this.generatedAccounts.length === 0) {
+                    this.showToast('❌ Nenhuma conta para baixar!', 'error');
+                    return;
+                }
                 
-                const now = new Date();
-                const timestamp = now.toISOString().slice(0, 19).replace(/[:.]/g, '-');
+                let fileContent = '';
+                const service = this.serviceData[this.selectedService];
                 
-                link.href = url;
-                link.download = `contas-psn-${timestamp}.txt`;
-                link.style.display = 'none';
+                fileContent += `${service.title} - Contas Geradas\n`;
+                fileContent += '='.repeat(50) + '\n\n';
                 
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
+                this.generatedAccounts.forEach((account, index) => {
+                    fileContent += `Conta #${account.number}\n`;
+                    fileContent += `-`.repeat(20) + '\n';
+                    fileContent += `Email: ${account.email}\n`;
+                    fileContent += `Senha: ${account.password}\n`;
+                    
+                    if (service.fields.includes('birthdate')) {
+                        fileContent += `Nascimento: ${account.birthdate}\n`;
+                    }
+                    
+                    if (index < this.generatedAccounts.length - 1) {
+                        fileContent += '\n';
+                    }
+                });
                 
-                URL.revokeObjectURL(url);
-                this.showSuccess('Arquivo TXT baixado com sucesso!');
+                fileContent += '\n' + '='.repeat(50) + '\n';
+                fileContent += `Total: ${this.accountCount} contas\n`;
+                fileContent += `Gerado em: ${new Date().toLocaleString('pt-BR')}\n`;
+                
+                try {
+                    const blob = new Blob([fileContent], { type: 'text/plain;charset=utf-8' });
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    
+                    const timestamp = new Date().toISOString().slice(0, 19).replace(/[:.]/g, '-');
+                    const serviceName = this.selectedService.replace('-', '_');
+                    
+                    link.href = url;
+                    link.download = `contas_${serviceName}_${timestamp}.txt`;
+                    link.style.display = 'none';
+                    
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    URL.revokeObjectURL(url);
+                    this.showToast('💾 Arquivo baixado com sucesso!', 'success');
+                } catch (error) {
+                    console.error('Download error:', error);
+                    this.showToast('❌ Erro ao baixar arquivo!', 'error');
+                }
             }
 
             clearResults() {
-                this.generatedAccounts = '';
+                this.generatedAccounts = [];
                 this.accountCount = 0;
-                this.resultsArea.textContent = 'Preencha o formulário e clique em "Gerar Contas" para ver os resultados aqui.';
-                this.resultsArea.classList.add('empty');
                 
+                // Clear the accounts grid
+                this.accountsGrid.innerHTML = '';
+                
+                // Show empty state
+                this.emptyState.style.display = 'block';
+                this.globalActions.style.display = 'none';
                 this.accountsCount.style.display = 'none';
                 
-                this.copyBtn.disabled = true;
-                this.downloadBtn.disabled = true;
-                this.clearBtn.disabled = true;
+                this.showToast('🗑️ Resultados limpos!', 'success');
+            }
+
+            showToast(message, type = 'success') {
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
                 
-                this.hideMessages();
-            }
-
-            showFieldError(field) {
-                field.classList.add('error');
-            }
-
-            clearFieldError(field) {
-                field.classList.remove('error');
-            }
-
-            showError(message) {
-                this.errorMessage.textContent = message;
-                this.errorMessage.style.display = 'block';
-                this.successMessage.style.display = 'none';
-            }
-
-            showSuccess(message) {
-                this.successMessage.textContent = message;
-                this.successMessage.style.display = 'block';
-                this.errorMessage.style.display = 'none';
+                const icon = type === 'success' ? '✅' : '❌';
+                toast.innerHTML = `
+                    <span>${icon}</span>
+                    <span>${message}</span>
+                `;
                 
-                // Auto-hide após 3 segundos
+                this.toastContainer.appendChild(toast);
+                
+                // Trigger animation
+                setTimeout(() => toast.classList.add('show'), 100);
+                
+                // Auto remove
                 setTimeout(() => {
-                    this.successMessage.style.display = 'none';
-                }, 3000);
-            }
-
-            hideMessages() {
-                this.errorMessage.style.display = 'none';
-                this.successMessage.style.display = 'none';
+                    toast.classList.remove('show');
+                    setTimeout(() => {
+                        if (toast.parentNode) {
+                            toast.parentNode.removeChild(toast);
+                        }
+                    }, 300);
+                }, 2000);
             }
             
-            // Simulação de persistência (localStorage será adicionado na versão do GitHub)
             saveFormData() {
-                // Salva no estado da aplicação (localStorage funcionará no GitHub Pages)
-                this.savedFormData = {
-                    dia: this.dayInput.value || '',
-                    mes: this.monthInput.value || '',
-                    inicial: this.startNumInput.value || '',
-                    final: this.endNumInput.value || ''
+                const formData = {
+                    selectedService: this.selectedService,
+                    day: this.dayInput.value,
+                    month: this.monthInput.value,
+                    startNum: this.startNumInput.value,
+                    endNum: this.endNumInput.value,
+                    emailProvider: this.emailProviderSelect.value
                 };
+                // Using in-memory storage (localStorage não funciona no ambiente sandboxed)
+                this.savedFormData = formData;
             }
             
             saveCustomizationData() {
-                // Salva no estado da aplicação (localStorage funcionará no GitHub Pages)
-                this.savedCustomData = {
-                    titulo: this.customTitle.value || '',
-                    senha: this.customPassword.value || '',
-                    nascimento: this.customBirthdate.value || '',
-                    prefixo: this.customEmailPrefix.value || ''
+                const customData = {
+                    password: this.customPassword.value,
+                    birthdate: this.customBirthdate.value,
+                    emailPrefix: this.customEmailPrefix.value
                 };
+                // Using in-memory storage (localStorage não funciona no ambiente sandboxed)
+                this.savedCustomData = customData;
             }
             
-            loadSavedData() {
-                // Inicializa os dados salvos
-                this.savedFormData = this.savedFormData || {};
-                this.savedCustomData = this.savedCustomData || {};
+            initializeDefaults() {
+                // Set default values for customization inputs
+                this.customPassword.value = this.savedCustomData.password || this.defaultSettings.password;
+                this.customBirthdate.value = this.savedCustomData.birthdate || this.defaultSettings.birthdate;
+                this.customEmailPrefix.value = this.savedCustomData.emailPrefix || this.defaultSettings.emailPrefix;
                 
-                // Carrega dados do formulário (se existirem)
-                this.dayInput.value = this.savedFormData.dia || '';
-                this.monthInput.value = this.savedFormData.mes || '';
-                this.startNumInput.value = this.savedFormData.inicial || '';
-                this.endNumInput.value = this.savedFormData.final || '';
-                
-                // Carrega dados de personalização
-                this.customTitle.value = this.savedCustomData.titulo || this.defaultSettings.title;
-                this.customPassword.value = this.savedCustomData.senha || this.defaultSettings.password;
-                this.customBirthdate.value = this.savedCustomData.nascimento || this.defaultSettings.birthdate;
-                this.customEmailPrefix.value = this.savedCustomData.prefixo || this.defaultSettings.emailPrefix;
+                // Restore form data if available
+                if (this.savedFormData.day) this.dayInput.value = this.savedFormData.day;
+                if (this.savedFormData.month) this.monthInput.value = this.savedFormData.month;
+                if (this.savedFormData.startNum) this.startNumInput.value = this.savedFormData.startNum;
+                if (this.savedFormData.endNum) this.endNumInput.value = this.savedFormData.endNum;
+                if (this.savedFormData.emailProvider) this.emailProviderSelect.value = this.savedFormData.emailProvider;
+                if (this.savedFormData.selectedService) {
+                    this.selectService(this.savedFormData.selectedService);
+                }
             }
             
-            setDefaultValues() {
-                this.customTitle.value = this.defaultSettings.title;
-                this.customPassword.value = this.defaultSettings.password;
-                this.customBirthdate.value = this.defaultSettings.birthdate;
-                this.customEmailPrefix.value = this.defaultSettings.emailPrefix;
-            }
-            
-            // Funções de personalização
             toggleCustomization() {
                 const isExpanded = this.customizationContent.classList.toggle('expanded');
                 
@@ -804,13 +1605,11 @@
                 } else {
                     this.toggleIcon.textContent = '⚙️';
                     this.toggleText.textContent = 'Personalizar Template';
-                    this.templatePreview.style.display = 'none';
                 }
             }
             
             getCurrentSettings() {
                 return {
-                    title: this.customTitle.value || this.defaultSettings.title,
                     password: this.customPassword.value || this.defaultSettings.password,
                     birthdate: this.customBirthdate.value || this.defaultSettings.birthdate,
                     emailPrefix: this.customEmailPrefix.value || this.defaultSettings.emailPrefix
@@ -818,69 +1617,44 @@
             }
             
             restoreDefaults() {
-                this.customTitle.value = this.defaultSettings.title;
                 this.customPassword.value = this.defaultSettings.password;
                 this.customBirthdate.value = this.defaultSettings.birthdate;
                 this.customEmailPrefix.value = this.defaultSettings.emailPrefix;
                 
                 this.saveCustomizationData();
-                this.updateTemplatePreview();
-                this.showSuccess('Configurações restauradas para os valores padrão!');
-            }
-            
-            updateTemplatePreview() {
-                const settings = this.getCurrentSettings();
-                const preview = `:PlaystationWhite: ${settings.title}
-
-:envelope: E-mail da conta: ${settings.emailPrefix}+[DDMM][NN]@gmail.com
-:lock: Senha da conta: ${settings.password}
-:calendar_spiral: Nascimento da conta: ${settings.birthdate}`;
-                
-                this.templatePreview.textContent = preview;
-            }
-            
-            showTemplatePreview() {
-                this.updateTemplatePreview();
-                
-                if (this.templatePreview.style.display === 'none') {
-                    this.templatePreview.style.display = 'block';
-                    this.previewTemplateBtn.textContent = '👁️ Ocultar Preview';
-                } else {
-                    this.templatePreview.style.display = 'none';
-                    this.previewTemplateBtn.textContent = '👁️ Visualizar Template';
-                }
-            }
-            
-            validateCustomFields() {
-                let isValid = true;
-                let errors = [];
-                
-                // Validar prefixo do email
-                const emailPrefix = this.customEmailPrefix.value.trim();
-                if (emailPrefix && !/^[a-zA-Z0-9]+$/.test(emailPrefix)) {
-                    errors.push('Prefixo do e-mail deve conter apenas letras e números');
-                    isValid = false;
-                }
-                
-                // Validar data de nascimento
-                const birthdate = this.customBirthdate.value.trim();
-                if (birthdate && !/^\d{2}\/\d{2}\/\d{4}$/.test(birthdate)) {
-                    errors.push('Data de nascimento deve estar no formato DD/MM/AAAA');
-                    isValid = false;
-                }
-                
-                if (!isValid) {
-                    this.showError(errors.join('\n'));
-                }
-                
-                return isValid;
+                this.showToast('⚙️ Configurações restauradas!', 'success');
             }
         }
+            
 
-        // Inicializar aplicação quando DOM carregar
+            
+        
+        // Add CSS for card animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Global reference for button onclick handlers
+        let app;
+        
+        // Initialize app
         document.addEventListener('DOMContentLoaded', () => {
-            new PSNAccountGenerator();
+            app = new PremiumAccountGenerator();
+            console.log('App initialized successfully!');
         });
+
+
     </script>
 </body>
 </html>
